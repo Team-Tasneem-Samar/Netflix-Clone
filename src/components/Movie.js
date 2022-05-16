@@ -3,7 +3,7 @@ import { useState } from "react";
 import ModalMovie from "./ModalMovie";
 import Button  from 'react-bootstrap/Button';
 
-export default function MovieList(props) {
+export default function Movie(props) {
     const [show, setShow] = useState(false);
     const [chosenMovie, setChosenMovies] = useState();
 
@@ -24,7 +24,7 @@ export default function MovieList(props) {
   </Card.Body>
 </Card>
             {
-                chosenMovie && <ModalMovie  show={show} handleClose={handleClose} chosenMovie={chosenMovie} />
+                chosenMovie && <ModalMovie  show={show} handleClose={handleClose} chosenMovie={chosenMovie} updateMovie={props.updateMovie} />
             }
           
         </>

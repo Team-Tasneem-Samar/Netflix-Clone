@@ -6,8 +6,8 @@ import  Button  from "react-bootstrap/Button";
 export default function FavList() {
     const [favMovies , setFavMovies] = useState();
     
-     async function getMovies(){
-       let url=`${process.env.REACT_APP_SERVER}/getMovies`
+     async function getFavMovies(){
+       let url=`https://movie-ma.herokuapp.com/getMovies`
        let response = await fetch (url,{
          method:'GET'
        });
@@ -16,31 +16,38 @@ export default function FavList() {
      }
     
      async function handleDeleteMovie(id){
-      let url=`${process.env.REACT_APP_SERVER}/DELETE/:id/${id}`;
+      let url=`https://movie-ma.herokuapp.com/DELETE?id=${id}`;
       let response = await fetch(url,{
         method: 'DELETE',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
       })
       if (response.status == 204){
-        getMovies();
+        getFavMovies();
         alert("Movie deleted successfully");
       }
      }
          useEffect(()=> {
-        getMovies();
+        getFavMovies();
          }, []);
     
       return (
         <>
           <h1> Favourite Movie Page </h1>
           {
-            favMovies && favMovies.map((props)=>{
+            favMovies && favMovies.map((favMovie)=>{
               return(
                 <Card style={{ width: '18rem' }}>
-                  <Card.Img variant="top" src={`https://image.tmdb.org/t/p/w500${props.movie.poster_path}`} />
+                  <Card.Img variant="top" src={`https://image.tmdb.org/t/p/w500/${favMovie.image}`} />
                   <Card.Body>
-                  <Card.Title>{props.movie.title}</Card.Title>
-                  <Card.Text>{props.movie.overview}</Card.Text>
-                  <Button variant="primary" onClick={()=>{handleDeleteMovie(favMovies.id)}}>Delete</Button>
+                  <Card.Title>{favMovie.name}</Card.Title>
+                  <Card.Text>{favMovie.summary}</Card.Text>
+                  <Card.Text>
+                  {favMovie.comment}
+                </Card.Text>
+                  <Button variant="primary" onClick={()=>{handleDeleteMovie(favMovie.id)}}>Delete</Button>
                  </Card.Body>
                 </Card>
               )

@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react';
 
 export default function Home() {
     const [movies, setMovies] = useState([]);
+    
     async function getMovies() {
-      let url = 'https://movie-js-1.herokuapp.com/trending'
+      let url = 'https://movie-ma.herokuapp.com/trending'
       let response = await fetch(url);
       let moviesData = await response.json();
       setMovies(moviesData);
