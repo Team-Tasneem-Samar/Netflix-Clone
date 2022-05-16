@@ -11,48 +11,58 @@ export default function ModalMovie(props){
     let userComment =commentRef.current.value;
     console.log({userComment});
     let newMovie= {...props.chosenMovie,userComment};
-    props.updatedMovie(newMovie,props.chosenMovie.id);
+    props.updateMovie(newMovie,props.chosenMovie.id);
   }
-  async function handleAddMovie(e,movie){
+
+  async function handleAddFav(e,movie){
     e.preventDefault();
-    let url=`${process.env.REACT_APP_SERVER}/addMovie`
+    let url=`https://movie-ma.herokuapp.com/addMovie`
     let data={
-      title: movie.title,
-      poster_path: movie.poster_path,
-      overview: movie.overview,
+      name: movie.title,
+      time: movie.release_date,
+      summary: movie.overview,
+      image: movie.poster_path,
+      comment: movie.comment,
     }
     console.log("data",data)
     let response= await fetch(url , {
-      method:'post',
+      method:'POST',
       headers:{
         'Content-Type':'application/json'
       },
       body:JSON.stringify(data),
     })
-    let addMovie=await response.json();
-    console.log("addedMovie", addMovie);
+    let addedMovie=await response.json();
+    console.log("addedMovie", addedMovie);
   }
     return(
         <>
-         <Modal show={props.show} onHide={props.handleClose}>
-        <Modal.Header closeButton>
+        <Modal show={props.show} onHide={props.handleClose}>
+        <Modal.Header closeButton style={{ backgroundColor: '#7F8487' }}>
           <Modal.Title>{props.chosenMovie.title}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-            <img src={`https://image.tmdb.org/t/p/w500${props.chosenMovie.poster_path}`} alt='movie image'/>
-            <Form.Control type="text" placeholder="Enter your comment "/>
-
-            <Button variant="primary" type="submit" onClick={(e)=>handleComment(e)}>
-              submit comment </Button>
-              <Button variant="primary" type="submit" onClick={(e)=>{handleAddMovie(e,props.chosenMovie)}}>
-              Add to favourite</Button>
+        <Modal.Body style={{ backgroundColor: '#7F8487' }}>
+          <img src={`https://image.tmdb.org/t/p/w400/${props.chosenMovie.poster_path}`} alt="Movie poster" />
+          <br />
+          {props.chosenMovie.comment ? props.chosenMovie.comment : 'No Comment'}
+          <Form>
+            <Form.Group
+              className="mb-3"
+              controlId="exampleForm.ControlTextarea1"
+            >
+              <Form.Control ref={commentRef} as="textarea" rows={3} placeholder="Entre your comment" />
+            </Form.Group>
+            <Button variant="primary" type="submit" onClick={(e) => handleComment(e)}>
+              Submit Comment
+            </Button>
+          </Form>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer style={{ backgroundColor: '#7F8487' }}>
           <Button variant="secondary" onClick={props.handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={props.handleClose}>
-            Save Changes
+          <Button variant="danger" type="submit" data-dismiss="modal" onClick={(e) => handleAddFav(e, props.chosenMovie)} >
+            Add To Favorite
           </Button>
         </Modal.Footer>
       </Modal>

@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Home from './components/Home';
 import Navbar from "./components/Navbar";
-import FavList from "./FavList";
+import FavList from "./components/FavList";
 
 
 function App() {
